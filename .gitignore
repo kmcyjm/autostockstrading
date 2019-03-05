@@ -1,0 +1,8 @@
+config.json
+__pycache__/
+.idea/
+bin/
+data/config.json
+.DS_Store
+http_requests/
+stock historical data/
