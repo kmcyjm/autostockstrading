@@ -28,5 +28,34 @@ If the monitored `Chg %` passed the threshold, this program will sell/buy the sp
 
 It worth mentioning that there is an additional step called `confirmOrder` following the `checkOrder` is needed for the order to be placed successfully in Degiro.
 
+## Get it up and running!
 
-  
+1. Follow instructions in pre-requisites to set up the environment.
+1. Clone the repo.
+1. Go to root directory of the repo, run `pipenv install` to install all the project dependencies.
+1. Set up a crontab task to start the program at the time specified. It also keeps monitoring the execution of this program, restart it if stopped.
+
+>crontab job
+```
+* 14-21 * * 1-5 restart_stockstrading_job.sh >> ~/Documents/crontab.log
+```
+
+>restart_stockstrading_job.sh
+```
+#!/bin/bash
+
+# crontab only sets PATH=/bin;/usr/bin by default
+PATH=/usr/bin:/usr/local/bin:/home/dwrm/.local/bin
+SHELL=/bin/bash
+working_dir="/home/dwrm/Dropbox/WorkSpace/PyCharmProjects/stocks"
+
+trading_process=$(pgrep -f '/home/dwrm/.local/share/virtualenvs/stocks-imp7Hn9_/bin/python -u -m autostockstrading')
+
+# using the actual returned pid from pgrep is much more reliable than $?
+if [ -z "$trading_process" ]; then
+    cd $working_dir
+    # -u must be used here to unbuffer the output from print in the program
+    pipenv run python -u -m autostockstrading >> /home/dwrm/Documents/restart_stockstrading_job.log 2>&1
+fi
+```
+

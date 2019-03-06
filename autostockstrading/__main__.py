@@ -65,7 +65,7 @@ def trade():
             #     notified.append(USNDQA100IndexChg)
 
             # Must be & logic here
-            if USNDQA100IndexChg >= 0.90 and priceChgPcnt[i] >= myTestPortfolio[i]['buyThreshold']:
+            if USNDQA100IndexChg >= 0.90 or priceChgPcnt[i] >= myTestPortfolio[i]['buyThreshold']:
                 print("{} {}".format(str(datetime.datetime.now()), USNDQA100IndexChg))
                 # SN.send_sms("Nasdaq 100 raised {}".format(USNDQA100IndexChg))
                 if myTestPortfolio[i]['bought'] == False:
