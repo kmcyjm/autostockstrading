@@ -20,7 +20,6 @@ def trade():
     notified = []
     SN = SendNotification()
 
-
     currentPrices, closePrices, priceChgPcnt = {}, {}, {}
 
     # myPorfolio = ['AMD', 'tenb', 'amzn', 'nvda', 'rpd', 'MDB', 'feye', 'intc', 'googl', 'nflx', 'appl', 'fb', 'tsla']
@@ -34,16 +33,16 @@ def trade():
              },
         'MDB':
             {'id': '13963976',
-            'sold': False,
-            'bought': False,
-            'buyThreshold': 3.50,
-            'sellThreshold': -2.80
+             'sold': False,
+             'bought': False,
+             'buyThreshold': 3.50,
+             'sellThreshold': -2.80
              }
     }
 
     # retrieve close price of previous day for each share
     for i in myTestPortfolio.keys():
-        previous =  requests.get(f'https://api.iextrading.com/1.0/stock/{i}/previous').json()
+        previous = requests.get(f'https://api.iextrading.com/1.0/stock/{i}/previous').json()
         closePrices[i] = previous['close']
 
     while True:
@@ -60,46 +59,46 @@ def trade():
         dayDiffEuro = float(Decimal(dayDiff).quantize(Decimal('.01')))
 
         # retrieve current price for each share, then cal the Chg %
-        for i in myTestPortfolio.keys():
-            currentPrices[i] = float(requests.get(f'https://api.iextrading.com/1.0/stock/{i}/price').text)
-            priceChgPcnt[i] = (currentPrices[i] - closePrices[i]) / closePrices[i] * 100
-            priceChgPcnt[i] = float(Decimal(priceChgPcnt[i]).quantize(Decimal('.01')))
-            print("{}'s closing price is {}, current price is {}, price changed {}".format(i, closePrices[i], currentPrices[i], priceChgPcnt[i]))
+        for j in myTestPortfolio.keys():
+            currentPrices[j] = float(requests.get(f'https://api.iextrading.com/1.0/stock/{j}/price').text)
+            priceChgPcnt[j] = (currentPrices[j] - closePrices[j]) / closePrices[j] * 100
+            priceChgPcnt[j] = float(Decimal(priceChgPcnt[j]).quantize(Decimal('.01')))
+            print("{}'s closing price is {}, current price is {}, price changed {}".format(j, closePrices[j], currentPrices[j], priceChgPcnt[j]))
 
             # if fabs(USNDQA100IndexChg) % 0.5 == 0.0 and USNDQA100IndexChg not in notified:
             #
             #     notified.append(USNDQA100IndexChg)
 
             # Must be & logic here
-            if USNDQA100IndexChg >= 0.62 or priceChgPcnt[i] >= myTestPortfolio[i]['buyThreshold']:
+            if USNDQA100IndexChg >= 0.62 or priceChgPcnt[j] >= myTestPortfolio[j]['buyThreshold']:
                 print("{} {} {}".format(str(datetime.datetime.now()), USNDQA100IndexChg, dayDiffEuro))
                 # SN.send_sms("Nasdaq 100 raised {}".format(USNDQA100IndexChg))
-                if myTestPortfolio[i]['bought'] == False:
+                if myTestPortfolio[j]['bought'] is False:
                     BS = BuySell()
-                    if i == 'AMD':
-                        BS.placeOrder('BUY', myTestPortfolio[i]['id'], 100)
-                    elif i == 'MDB':
-                        BS.placeOrder('BUY', myTestPortfolio[i]['id'], 30)
+                    if j == 'AMD':
+                        BS.placeOrder('BUY', myTestPortfolio[j]['id'], 500)
+                    elif j == 'MDB':
+                        BS.placeOrder('BUY', myTestPortfolio[j]['id'], 100)
 
-                    myTestPortfolio[i]['bought'] = True
-                    myTestPortfolio[i]['sold'] = False
+                    myTestPortfolio[j]['bought'] = True
+                    myTestPortfolio[j]['sold'] = False
 
                 time.sleep(10)
 
-            elif USNDQA100IndexChg <= -0.62 or priceChgPcnt[i] <= myTestPortfolio[i]['sellThreshold'] or dayDiffEuro <= -150.0:
+            elif USNDQA100IndexChg <= -0.62 or priceChgPcnt[j] <= myTestPortfolio[j]['sellThreshold'] or dayDiffEuro <= -200.0:
                 print("{} {} {}".format(str(datetime.datetime.now()), USNDQA100IndexChg, dayDiffEuro))
                 # SN.send_sms("Nasdaq 100 dropped {}".format(USNDQA100IndexChg))
-                if myTestPortfolio[i]['sold'] == False:
+                if myTestPortfolio[j]['sold'] is False:
                     BS = BuySell()
                     portfolio = BS.getPortfolio()
 
                     # sell all shares
                     for m in portfolio:
-                        if myTestPortfolio[i]['id'] == m['id']:
+                        if myTestPortfolio[j]['id'] == m['id']:
                             BS.placeOrder('SELL', m['id'], int(m['size']))
 
-                    myTestPortfolio[i]['sold'] = True
-                    myTestPortfolio[i]['bought'] = False
+                    myTestPortfolio[j]['sold'] = True
+                    myTestPortfolio[j]['bought'] = False
 
                 time.sleep(10)
 
@@ -108,6 +107,7 @@ def trade():
                 # BS.placeOrder('BUY', '13963976', 1)
                 print("{} {} {}".format(str(datetime.datetime.now()), USNDQA100IndexChg, dayDiffEuro))
                 time.sleep(10)
+
 
 if __name__ == '__main__':
     trade()
