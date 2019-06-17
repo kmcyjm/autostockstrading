@@ -2,6 +2,7 @@
 from autostockstrading import twilioAccountId, twilioAuthToken, twilioFromPhoneNumber, twilioToPhoneNumber
 from twilio.rest import Client
 
+
 class SendNotification:
     def __init__(self):
         pass

@@ -16,17 +16,21 @@ And with the help of `pipenv`, the dependencies of the project is auto updated (
 is as easy as cloning the repo, and running `pipenv install` the same directory as the `Pipfile`. pipenv also automatically creates a virtual environment for the project.
 
 ## How it works
-This project starts Chrome in headless mode, imitate user action in the GUI browser to log in to www.degiro.ie using username/password.
+This project uses Selenium to start Chrome in headless mode, then log in to https://www.degiro.ie by simulating users
+typing the username/password in a website.
 
-After rendering the web page using Selenium + Chrome, it then uses XPATH(in Selenium) to retrieve `Day Diff` and Nasdaq 100 index change on the website.
+After a successful login, the user home page will be rendered into plain HTML, it is then parsed using `XPATH` by 
+Selenium to retrieve `DayDiff` and `% Chg` (Percent Change) of Nasdaq100 index on the web page.
 
-Meanwhile, it retrieves the open price + instant price for interested shares, calculate and compare the `Chg %` of the price to pre-defined threshold.
-
-The pre-defined threshold for each share is analysed using histogram utilizing the historical daily `Chg %`since year 2000 (if exists).
-
-If the monitored `Chg %` passed the threshold, this program will sell/buy the specified shares as instructed.
+Next, the open price and instant price for each share is retrieved in the current portofolio, and the Percent Change 
+`(instant price - open price) * 100% / open price` is calculated for each of them. This value is then 
+compared with the buy&sell thresholds pre-defined for each share, along with the NASDAQ100 index Percent Change to 
+decide whether to buy or sell a specific share.
 
 It worth mentioning that there is an additional step called `confirmOrder` following the `checkOrder` is needed for the order to be placed successfully in Degiro.
+
+> The pre-defined thresholds for each share is a statistical result from the histogram based on the historical 
+data of daily Percent Change since year 2000.
 
 ## Get it up and running!
 

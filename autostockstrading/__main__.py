@@ -1,15 +1,12 @@
-# TODO [done] retrieve all favorite share data, and cal the Chg %
-# TODO retrieve pre-market, if it exceeds the threshold, don't take action
-# TODO [done] retrieve opening price
-# TODO sell stocks if threshold is exceeded for certain period of time, instead of immediately
+
 # TODO add test to check xpath is still correct
 
 
 import time
 import datetime
 from decimal import Decimal
-from math import fabs
-from autostockstrading.notification import SendNotification
+# from math import fabs
+# from autostockstrading.notification import SendNotification as SN
 from autostockstrading import driver
 from autostockstrading.buysell import BuySell
 import requests
@@ -17,8 +14,8 @@ import requests
 
 def trade():
 
-    notified = []
-    SN = SendNotification()
+    # notified = []
+    # SN = SendNotification()
 
     myPortfolio = {
         'AMD':
@@ -107,7 +104,7 @@ def trade():
         USNDQA100IndexChg = float(Decimal(USNDQA100[:-1]).quantize(Decimal('.01')))
         dayDiffEuro = float(Decimal(dayDiff).quantize(Decimal('.01')))
 
-        # retrieve current price for each share, then cal the Chg %
+        # retrieve current price for each share, then calc the Chg %
         for j in myPortfolio.keys():
             myPortfolio[j]['currentPrice'] = float(requests.get(f'https://api.iextrading.com/1.0/stock/{j}/price').text)
             myPortfolio[j]['priceChgPcnt'] = ((myPortfolio[j]['currentPrice'] - myPortfolio[j]['closePrice']) /

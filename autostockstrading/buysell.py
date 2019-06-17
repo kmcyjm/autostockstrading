@@ -145,7 +145,3 @@ class BuySell:
         self.confirmOrder(confirmationId, tradeType, id, size)
 
         print('Order placed successfully! monitoring continues.\n\n')
-
-
-
-

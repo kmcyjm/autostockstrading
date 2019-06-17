@@ -32,8 +32,7 @@ driver = webdriver.Chrome(chrome_options=options)
 
 driver.implicitly_wait(5)
 
-driver.get(
-    "https://trader.degiro.nl/login/ie?_ga=2.155780798.424581382.1545820572-1247114947.1542379073#/login")
+driver.get("https://trader.degiro.nl/login/ie?_ga=2.155780798.424581382.1545820572-1247114947.1542379073#/login")
 driver.find_element_by_id("username").click()
 driver.find_element_by_id("username").clear()
 
