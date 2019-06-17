@@ -4,6 +4,5 @@ __pycache__/
 .idea/
 bin/
 **/config.json
-.DS_Store
 http_requests/
 stock historical data/
